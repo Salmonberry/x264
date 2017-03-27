@@ -560,6 +560,14 @@ void x264_quant_init( x264_t *h, int cpu, x264_quant_function_t *pf )
         if( cpu&X264_CPU_LZCNT )
             pf->coeff_last[DCT_LUMA_8x8] = x264_coeff_last64_avx2_lzcnt;
     }
+    if( cpu&X264_CPU_AVX512 )
+    {
+        pf->coeff_last4 = x264_coeff_last4_avx512;
+        pf->coeff_last8 = x264_coeff_last8_avx512;
+        pf->coeff_last[ DCT_LUMA_AC] = x264_coeff_last15_avx512;
+        pf->coeff_last[DCT_LUMA_4x4] = x264_coeff_last16_avx512;
+        pf->coeff_last[DCT_LUMA_8x8] = x264_coeff_last64_avx512;
+    }
 #endif // HAVE_MMX
 #else // !HIGH_BIT_DEPTH
 #if HAVE_MMX
@@ -723,6 +731,13 @@ void x264_quant_init( x264_t *h, int cpu, x264_quant_function_t *pf )
             pf->coeff_level_run[ DCT_LUMA_AC] = x264_coeff_level_run15_avx2_lzcnt;
             pf->coeff_level_run[DCT_LUMA_4x4] = x264_coeff_level_run16_avx2_lzcnt;
         }
+    }
+    if( cpu&X264_CPU_AVX512 )
+    {
+        pf->coeff_last8 = x264_coeff_last8_avx512;
+        pf->coeff_last[ DCT_LUMA_AC] = x264_coeff_last15_avx512;
+        pf->coeff_last[DCT_LUMA_4x4] = x264_coeff_last16_avx512;
+        pf->coeff_last[DCT_LUMA_8x8] = x264_coeff_last64_avx512;
     }
 #endif // HAVE_MMX
 
